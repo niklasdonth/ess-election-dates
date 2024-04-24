@@ -4,10 +4,12 @@ library("readr")
 
 # ParlGov Development Version (4. Nov. 2023) ------------------------------
 # if countries are not included (e.g. North Macedonia, Montenegro) --> Wikipedia
+# https://www.parlgov.org/data-info/ 
+# (accessed: 23.04.2024)
 
 election_dates <- read_csv("view_election.csv")
 
-# Get the Year of the Elections (and month & day for later)
+# Split date of the Elections into components
 
 election_dates$year <- year(election_dates$election_date)
 election_dates$month <- month(election_dates$election_date)
@@ -96,6 +98,180 @@ nd_add$recent_election_split1[nd_add$cntry == "NO"] <- as.Date("2017-09-11")
 nd_add$recent_election_split1[nd_add$cntry == "PT"] <- as.Date("2019-10-06")
 nd_add$recent_election_split1[nd_add$cntry == "RS"] <- as.Date("2017-04-02")
 
-# Merge with Cohens' work -------------------------------------------------
+# Add Number of days between most recent election and last interview 
+
+nd_add <- nd_add %>% mutate(max_days_since_election = round(difftime(field_end, 
+                                          recent_election, units = "days")))
+
+# Augmentation of Cohens' original work -----------------------------------
 
 load("ess_election_dates_added.RData")
+
+# Add missing information & correct errors from Cohens' work (same sources as above)
+# I chose not to add Information on Russia, because those elections are not comparable
+# Albania
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "AL" & 
+                         ess_election_dates_added$essround == 6] <- "2009-06-28"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "AL" & 
+                        ess_election_dates_added$essround == 6] <- FALSE
+# Austria
+
+ess_election_dates_added$field_start[ess_election_dates_added$cntry == "AT" & 
+                         ess_election_dates_added$essround == 4] <- "2010-11-01"
+
+ess_election_dates_added$field_end[ess_election_dates_added$cntry == "AT" & 
+                         ess_election_dates_added$essround == 4] <- "2011-02-28"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "AT" & 
+                          ess_election_dates_added$essround == 4] <- FALSE
+
+ess_election_dates_added$field_start[ess_election_dates_added$cntry == "AT" & 
+                         ess_election_dates_added$essround == 5] <- "2013-05-24"
+
+ess_election_dates_added$field_end[ess_election_dates_added$cntry == "AT" & 
+                         ess_election_dates_added$essround == 5] <- "2013-10-10"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "AT" & 
+                          ess_election_dates_added$essround == 5] <- TRUE
+
+ess_election_dates_added$recent_election_split1[ess_election_dates_added$cntry == "AT" & 
+                         ess_election_dates_added$essround == 5] <- "2008-09-28"
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "AT" & 
+                       ess_election_dates_added$essround == 5] <- "2013-09-29"
+
+# Bulgaria 
+
+ess_election_dates_added$field_start[ess_election_dates_added$cntry == "BG" & 
+                       ess_election_dates_added$essround == 9] <- "2018-11-16"
+
+ess_election_dates_added$field_end[ess_election_dates_added$cntry == "BG" & 
+                       ess_election_dates_added$essround == 9] <- "2018-12-15"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "BG" & 
+                        ess_election_dates_added$essround == 9] <- FALSE
+
+# Denmark 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "DK" & 
+                              ess_election_dates_added$essround == 9] <- FALSE
+
+# Estonia 
+
+ess_election_dates_added$field_start[ess_election_dates_added$cntry == "EE" & 
+                         ess_election_dates_added$essround == 5] <- "2010-10-10"
+
+ess_election_dates_added$field_end[ess_election_dates_added$cntry == "EE" & 
+                         ess_election_dates_added$essround == 5] <- "2011-05-28"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "EE" & 
+                          ess_election_dates_added$essround == 5] <- TRUE
+
+ess_election_dates_added$recent_election_split1[ess_election_dates_added$cntry == "EE" & 
+                            ess_election_dates_added$essround == 5] <- "2007-03-04"
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "EE" & 
+                           ess_election_dates_added$essround == 5] <- "2011-03-06"
+
+# Spain 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "ES" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Croatia
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "HR" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Iceland 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "IS" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Lithuania 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "LT" & 
+                              ess_election_dates_added$essround == 9] <- FALSE
+
+# Latvia 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "LV" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Portugal 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "PT" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Serbia 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "RS" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Sweden 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "SE" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Slovakia 
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "SK" & 
+                            ess_election_dates_added$essround == 9] <- FALSE
+
+# Ukraine 
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "UA" & 
+                          ess_election_dates_added$essround == 2] <- "2002-03-31"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "UA" & 
+                            ess_election_dates_added$essround == 2] <- FALSE
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "UA" & 
+                            ess_election_dates_added$essround == 3] <- "2006-03-26"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "UA" & 
+                            ess_election_dates_added$essround == 3] <- FALSE
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "UA" & 
+                            ess_election_dates_added$essround == 4] <- "2007-09-30"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "UA" & 
+                            ess_election_dates_added$essround == 4] <- FALSE
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "UA" & 
+                        ess_election_dates_added$essround == 5] <- "2007-09-30"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "UA" & 
+                              ess_election_dates_added$essround == 5] <- FALSE
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "UA" & 
+                          ess_election_dates_added$essround == 6] <- "2012-10-28"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "UA" & 
+                            ess_election_dates_added$essround == 6] <- FALSE
+
+# Kosovo 
+
+ess_election_dates_added$recent_election[ess_election_dates_added$cntry == "XK" & 
+                         ess_election_dates_added$essround == 6] <- "2010-12-12"
+
+ess_election_dates_added$split_wave[ess_election_dates_added$cntry == "XK" & 
+                        ess_election_dates_added$essround == 6] <- FALSE
+
+# Add missing Number of days between most recent election and last interview 
+
+ess_election_dates_added <- ess_election_dates_added %>%  
+  mutate(max_days_since_election = round(difftime(field_end, 
+                                        recent_election, units = "days")))
+
+# Merge with Cohens' work -------------------------------------------------
+
+ess_election_dates_R1_10 <- ess_election_dates_added %>% 
+  bind_rows(nd_add) %>% 
+  arrange(cntry, essround)
+
+save(ess_election_dates_R1_10, file = "ess_election_dates_R1_10.RData")
+write.csv(ess_election_dates_R1_10, "ess_election_dates_R1_10.csv")
+
